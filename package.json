@@ -1,0 +1,25 @@
+{
+  "name": "happner-component-relay",
+  "version": "0.0.0",
+  "description": "A component to enable exposing selected functionalities from nodes on a private branch via a node on a public branch.",
+  "main": "lib/component_relay.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "objective --once"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/happner/happner-component-relay.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/happner/happner-component-relay/issues"
+  },
+  "homepage": "https://github.com/happner/happner-component-relay",
+  "devDependencies": {
+    "objective": "0.0.37"
+  }
+}
