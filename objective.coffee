@@ -9,7 +9,8 @@ objective
         at the remote.
 
         This inserted component appears as if hosted on the local (public) node but
-        transparently relays all calls onward to the component at the remote.
+        transparently relays all calls onward (via the event api) to the component
+        at the remote.
 
         The remote can add and remove this advertised fraction of itself at will.
 
