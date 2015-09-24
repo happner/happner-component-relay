@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/happner/happner-component-relay",
   "devDependencies": {
-    "objective": "0.0.37"
+    "objective": "0.0.37",
+    "happner": "git://github.com/happner/happner.git#release/0.0.30"
   }
 }
