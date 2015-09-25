@@ -43,7 +43,7 @@ module.exports.config = function(i, j) {
       },
       'thing2': {
         module: 'thing'
-      }
+      },
     }
   }
 }
