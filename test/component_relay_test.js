@@ -8,7 +8,7 @@ objective('ComponentRelay', function() {
   });
 
 
-  context('calls server.createConnected() if datalayer connectable', function() {
+  context('calls server.relayConnected() if datalayer connectable', function() {
 
 
     before(function(done, Promise, happner, GroupConfig, PersonConfig, ComponentRelay) {
@@ -66,9 +66,9 @@ objective('ComponentRelay', function() {
           }
         }
 
-        // expect 1 call the createConnected()
+        // expect 1 call the relayConnected()
 
-        Server.does(function createConnected(a, b, callback) {callback()});
+        Server.does(function relayConnected(a, b, callback) {callback()});
 
         // person initiates relay of his/her private thing
 
@@ -104,11 +104,11 @@ objective('ComponentRelay', function() {
           }
         };
 
-        // expect 2 calls to createConnected()
+        // expect 2 calls to relayConnected()
 
         Server.does(
-          function createConnected(happn, connection, relaySpec, callback) {callback()},
-          function createConnected(happn, connection, relaySpec, callback) {callback()}
+          function relayConnected(happn, connection, relaySpec, callback) {callback()},
+          function relayConnected(happn, connection, relaySpec, callback) {callback()}
         );
 
         // expect 1 call to addConnection
@@ -128,11 +128,71 @@ objective('ComponentRelay', function() {
       }
     );
 
-    it('uses existing connection');
+    it.only('uses existing connection',
+
+      function(done, Server, relay, group1, person3, expect) {
+
+        var $happn1 = person3._mesh.elements.thing1.component.instance;
+        var $happn2 = person3._mesh.elements.thing2.component.instance;
+
+        var relaySpec1 = {
+          target: $happn1.info.datalayer.address,
+          component: {
+            name: 'person3_thing1',
+            description: $happn1.description,
+          }
+        };
+        var relaySpec2 = {
+          target: $happn2.info.datalayer.address,
+          component: {
+            name: 'person3_thing2',
+            description: $happn2.description,
+          }
+        };
+
+        // expect 1 call to relayConnected
+
+        Server.does(
+          function relayConnected(happn, connection, relaySpec, callback) {callback()}
+        );
+
+        person3.exchange.group1.relay.create(relaySpec1)
+
+        .then(function() {
+
+          // expect 1 call to relayConnected
+
+          Server.does(
+            function relayConnected(happn, connection, relaySpec, callback) {callback()}
+          );
+
+          // expct no calls to addConnection
+
+          relay.spy(
+            function addConnection() {
+              throw new Error('called addConnection');
+            }
+          );
+
+          return person3.exchange.group1.relay.create(relaySpec2)
+
+        })
+
+        .then(function(r) {
+          console.log(r);
+          done();
+        })
+
+        .catch(function(e) {
+          console.log(e);
+          done(e);
+        });
+      }
+    );
 
   });
 
 
-  context('calls server.createEvented() if no connection is possible/available');
+  context('calls server.relayEvented() if no connection is possible/available');
 
 });
