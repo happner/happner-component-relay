@@ -20,8 +20,9 @@
   },
   "homepage": "https://github.com/happner/happner-component-relay",
   "devDependencies": {
-    "objective": "0.0.37",
-    "happner": "git://github.com/happner/happner.git#release/0.0.30"
+    "chai": "^3.3.0",
+    "happner": "git://github.com/happner/happner.git#release/0.0.30",
+    "objective": "0.0.37"
   },
   "dependencies": {
     "bluebird": "^2.10.1"
