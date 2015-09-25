@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "objective --once"
+    "test": "LOG_LEVEL=off objective --once"
   },
   "repository": {
     "type": "git",
