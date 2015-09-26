@@ -4,10 +4,6 @@
 
 var thing = {
   exchangeMethod: function($happn, opts, callback) {
-
-    // console.log('$happn', $happn);
-    console.log('OPTS', opts);
-
     opts.ReplyFrom = $happn.info.mesh.name + '.' + $happn.name;
     callback(null, opts);
   },

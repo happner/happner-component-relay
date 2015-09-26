@@ -15,8 +15,10 @@ objective('Server', function() {
     });
 
     mock('connection', {
-      exchange: {
-        'target_component': {} // The module at the 'remote' as visible over the connection.
+      endpoint: {
+        exchange: {
+          'target_component': {} // The module at the 'remote' as visible over the connection.
+        }
       }
     });
 
@@ -49,7 +51,7 @@ objective('Server', function() {
 
   });
 
-  context('createDynamicModule()', function() {
+  context.only('createDynamicModule()', function() {
 
     context('Using Connection', function() {
 
@@ -59,7 +61,7 @@ objective('Server', function() {
 
           // Create expectations on the exchange for the target module's methods 
 
-          mock(connection.exchange.target_component).does(
+          mock(connection.endpoint.exchange.target_component).does(
             function exchangeMethod1(arg1, arg2, callback) {
               callback(null, 'RESULT ' + arg1 + ' ' + arg2);
             },

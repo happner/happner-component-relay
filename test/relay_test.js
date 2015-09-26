@@ -192,7 +192,7 @@ objective('Relay', function() {
 
     it('uses existing endpoint');
 
-    it.only('---► Create and use a relayed component over datalayer connection',
+    it('► Create and use a relayed component over datalayer connection',
 
       function(done, happner, GroupConfig, PersonConfig, expect) {
 
@@ -234,7 +234,7 @@ objective('Relay', function() {
           expect(result).to.eql({
             opt: 'ions',
             ReplyFrom: 'person0.thing1'
-          })
+          });
 
         })
 
@@ -342,7 +342,7 @@ objective('Relay', function() {
       }
     );
 
-    it('---► Create and use a relayed component over "reverse" event api', function() {
+    it('► Create and use a relayed component over "reverse" event api', function() {
       throw Pending;
     });
 
