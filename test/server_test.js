@@ -15,6 +15,15 @@ objective('Server', function() {
     });
 
     mock('connection', {
+      target: {
+        address: '127.0.0.1',
+        // address: '127.0.0.2',
+        // port: 80,
+        // port: 443,
+        port: 55555,
+        // protocol: 'git+ssh',
+        // hostname: 'some.vhost.com',
+      },
       endpoint: {
         exchange: {
           'target_component': {} // The module at the 'remote' as visible over the connection.
@@ -29,22 +38,10 @@ objective('Server', function() {
 
           name: 'target_component',
           
-          'methods': {
-            exchangeMethod1: {
-              // parameters: []   - NOT SUPPORTING other than standard (arg1, ..., argN, callback)
-              // callback: {
-              //   parameters: [] - NOT SUPPORTING other than standard (error, results)
-              // }
-            },
-            exchangeMethod2: {},
-            exchangeMethod3: {},
-          },
-
-          'routes': {
-            '/thing1/method1': {},
-            '/thing1/method2': {},
-          }
-
+          methods: {},
+          routes: {},
+          events: {},
+          data: {},
         }
       }
     });
@@ -73,6 +70,15 @@ objective('Server', function() {
             }
           )
 
+          relaySpec.component.description.methods = {
+            exchangeMethod1: {},
+            exchangeMethod2: {},
+            exchangeMethod3: {},
+          };
+          relaySpec.component.description.routes = {};
+          relaySpec.component.description.events = {};
+          relaySpec.component.description.data = {};
+
           Server.createDynamicModule('connected', $happn, connection, relaySpec, function(e, instance) {
             if (e) return done(e);
 
@@ -91,6 +97,31 @@ objective('Server', function() {
             })
 
             .then(done).catch(done);
+          });
+        }
+      );
+
+      it('creates relay routes according to description.routes',
+
+        function(done, Server, expect, $happn, connection, relaySpec, Promise) {
+
+          relaySpec.component.description.methods = {};
+          relaySpec.component.description.routes = {
+            '/target_component/webMethodGet': {},
+            // '/target_component/webMethodPut': {},
+            // '/target_component/webMethodPost': {},
+            // '/target_component/webMethodDelete': {},
+            // TODO: the rest of them
+          };
+          relaySpec.component.description.events = {};
+          relaySpec.component.description.data = {};
+
+          Server.createDynamicModule('connected', $happn, connection, relaySpec, function(e, instance, routes) {
+
+            expect(instance['/target_component/webMethodGet'] instanceof Function).to.equal(true);
+            expect(routes.webMethodGet).to.equal('/target_component/webMethodGet');
+            done();
+
           });
         }
       );

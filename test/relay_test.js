@@ -5,6 +5,7 @@ objective('Relay', function() {
     mock('PersonConfig', require('./_person_config').config);
     mock('Promise', require('bluebird'));
     mock('expect', require('chai').expect);
+    mock('request', require('bluebird').promisifyAll(require('request')))
   });
 
 
@@ -192,9 +193,9 @@ objective('Relay', function() {
 
     it('uses existing endpoint');
 
-    it('► Create and use a relayed component over datalayer connection',
+    it.only('► Create and use a relayed component over datalayer connection',
 
-      function(done, happner, GroupConfig, PersonConfig, expect) {
+      function(done, happner, GroupConfig, PersonConfig, expect, request) {
 
         this.timeout(2000);
 
@@ -235,6 +236,20 @@ objective('Relay', function() {
             opt: 'ions',
             ReplyFrom: 'person0.thing1'
           });
+
+        })
+
+        .then(function() {
+
+          // call to webmethod
+
+          return request.getAsync('http://localhost:10000/relay_person0_thing1/method/moo/ook')
+
+        })
+
+        .then(function(result) {
+
+          expect(result[0].body).to.equal('reply for GET from person0.thing1.webMethod() with /moo/ook');
 
         })
 

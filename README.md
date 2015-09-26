@@ -71,7 +71,12 @@ $happn.public_endpoint.relay.create({
   //   relay traffic will be transported across the event api.
   //
 
-  target: $happn.info.datalayer.address,
+  target: $happn.info.datalayer.address, // ?may? need to define / override (
+                                         //  - target.hostname
+                                         //  - target.port
+                                         //  - targer.protocol (http, https)
+                                         // ) if mesh node behind vhosting (nginx, apache, etc.)
+                                         // dunno (havent looked into it yet)
   
   // component
   // ---------

@@ -25,6 +25,7 @@
     "objective": "0.0.40"
   },
   "dependencies": {
-    "bluebird": "^2.10.1"
+    "bluebird": "^2.10.1",
+    "request": "^2.64.0"
   }
 }

@@ -8,7 +8,7 @@ var thing = {
     callback(null, opts);
   },
   webMethod: function($happn, req, res) {
-    res.end('reply from ' + $happn.info.mesh.name + '.' + $happn.name);
+    res.end('reply for ' + req.method + ' from ' + $happn.info.mesh.name + '.' + $happn.name + '.' + 'webMethod() with ' + req.url);
   },
   $happner: {
     config: {
