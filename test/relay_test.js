@@ -192,9 +192,9 @@ objective('Relay', function() {
 
     it('uses existing endpoint');
 
-    it('---► Create and use a relayed component',
+    it.only('---► Create and use a relayed component over datalayer connection',
 
-      function(done, happner, GroupConfig, PersonConfig) {
+      function(done, happner, GroupConfig, PersonConfig, expect) {
 
         this.timeout(2000);
 
@@ -202,11 +202,11 @@ objective('Relay', function() {
         var person0;
         var $happn;
 
-        happner.create(GroupConfig(0))
+        happner.create(GroupConfig(0)) // Create mesh node called group0
 
         .then(function(group) {
           group0 = group;
-          return happner.create(PersonConfig(0, 0));
+          return happner.create(PersonConfig(0, 0)); // Create mesh node called person0
         })
 
         .then(function(person) {
@@ -215,7 +215,7 @@ objective('Relay', function() {
           return person0.exchange.group0.relay.createServer({
             target: $happn.info.datalayer.address,
             component: {
-              name: 'relay_person0_thing1',
+              name: 'relay_person0_thing1', // <--------------------------
               description: $happn.description
             }
           });
@@ -223,7 +223,24 @@ objective('Relay', function() {
 
         .then(function() {
 
-          throw Pending  // TODO: objective_dev: pend a partially implemented test (NB without not running it)
+          // Call through relay to person0/thing1/exchangeMethod()
+
+          return group0.exchange.relay_person0_thing1.exchangeMethod({opt:'ions'});
+
+        })
+
+        .then(function(result) {
+
+          expect(result).to.eql({
+            opt: 'ions',
+            ReplyFrom: 'person0.thing1'
+          })
+
+        })
+
+        .then(function() {
+
+          throw Pending
 
         })
 
@@ -322,9 +339,12 @@ objective('Relay', function() {
 
         .then(done).catch(done);
 
-
       }
     );
+
+    it('---► Create and use a relayed component over "reverse" event api', function() {
+      throw Pending;
+    });
 
   });
 

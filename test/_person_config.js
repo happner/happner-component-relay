@@ -4,7 +4,11 @@
 
 var thing = {
   exchangeMethod: function($happn, opts, callback) {
-    opts.from = $happn.info.mesh.name + '.' + $happn.name;
+
+    // console.log('$happn', $happn);
+    console.log('OPTS', opts);
+
+    opts.ReplyFrom = $happn.info.mesh.name + '.' + $happn.name;
     callback(null, opts);
   },
   webMethod: function($happn, req, res) {

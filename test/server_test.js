@@ -1,4 +1,4 @@
-objective.only('Server', function() {
+objective('Server', function() {
 
   before(function() {
     // mock('GroupConfig',  require('./_group_config').config);
