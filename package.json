@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "LOG_LEVEL=off objective --once"
+    "test": "LOG_LEVEL=warn objective --once"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "devDependencies": {
     "chai": "^3.3.0",
     "happner": "git://github.com/happner/happner.git#release/0.0.30",
-    "objective": "0.0.39"
+    "objective": "0.0.40"
   },
   "dependencies": {
     "bluebird": "^2.10.1"
