@@ -1,14 +1,38 @@
-objective('Server', function() {
+objective.only('Server', function() {
+
+  before(function() {
+    // mock('GroupConfig',  require('./_group_config').config);
+    // mock('PersonConfig', require('./_person_config').config);
+    // mock('Promise', require('bluebird'));
+    mock('expect', require('chai').expect);
+    mock('should', new require('chai').should());
+  });
+
+  context('createDynamicModule()', function() {
+
+    context('Using Connection', function() {
+
+      it('');
+      
+    });
+
+    context('Unsing Event Api', function() {
+
+      it('');
+
+    });
+
+  });
 
   context('relayConnected()', function() {
 
     before(function() {
 
-      mock('connection', {
-
+      mock('$happn', {
+        _mesh: {}
       });
 
-      mock('happn', {
+      mock('connection', {
 
       });
 
@@ -41,9 +65,53 @@ objective('Server', function() {
 
     context('exchange methods', function() {
 
-      it('creates a representative component on the exchange api');
+      it('inserts a representative component into the mesh',
 
-      it('the representative component relays method call across the connection');
+        function(done, Server, expect, $happn, connection, relaySpec) {
+
+          mock($happn._mesh).does(
+
+            // Ensure _createElement is called with all the right bits.
+
+            function _createElement(spec, writeSchema, callback) {
+
+              writeSchema.should.equal(true);
+
+              spec.component.name.should.equal('relay_component_name');
+              spec.component.config.should.eql({
+                module: 'relay_component_name'
+              });
+
+              spec.module.name.should.equal('relay_component_name');
+
+              // The 'representative' module
+              // - dynamically created per relaySpec.component.description
+              //
+              var instance = spec.module.config.instance;
+              
+              expect(instance).to.equal('__INSTANCE__');
+
+              callback();
+            }
+          )
+
+          Server.does(
+            function createDynamicModule(type, $happn, connection, relaySpec, callback) {
+              callback(null, '__INSTANCE__');
+            } 
+          )
+
+          Server.relayConnected($happn, connection, relaySpec, done);
+        }
+      );
+
+      it('the representative component relays method calls across the connection');
+
+      it('fails if component name already exists');
+
+      xit('fails on mountpoint occupied ?? or merge option');
+
+      it('does not allow for insertion of component with accessLevel "mesh" ?? pending security');
 
     });
 
