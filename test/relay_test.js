@@ -1,4 +1,4 @@
-objective('ComponentRelay', function() {
+objective('Relay', function() {
 
   before(function() {
     mock('GroupConfig',  require('./_group_config').config);
@@ -10,7 +10,7 @@ objective('ComponentRelay', function() {
 
   context('calls server.relayConnected() if datalayer connectable', function() {
 
-    before(function(done, Promise, happner, GroupConfig, PersonConfig, ComponentRelay) {
+    before(function(done, Promise, happner, GroupConfig, PersonConfig) {
       this.timeout(2000);
       Promise.all([
         happner.create(GroupConfig(1)),
@@ -47,11 +47,11 @@ objective('ComponentRelay', function() {
       
     it('makes new connection',
 
-      function(done, /* ComponentRelay, */ Server, relay1, group1, person1, expect) {
+      function(done, /* Relay, */ Server, relay1, group1, person1, expect) {
 
         // var relay;
-        // mock(ComponentRelay.prototype).spy(
-        //   function create($happn) { // TODO: objective_dev: can't mock on function using injection
+        // mock(Relay.prototype).spy(
+        //   function createServer($happn) { // TODO: objective_dev: can't mock on function using injection
         //     relay = this;
         //   }
         // );
@@ -80,7 +80,7 @@ objective('ComponentRelay', function() {
 
         // person initiates relay of his/her private thing
 
-        person1.exchange.group1.relay.create(relaySpec1)
+        person1.exchange.group1.relay.createServer(relaySpec1)
 
         .then(function() {
           expect(Object.keys(   relay1.connections   )).to.eql(['127.0.0.1:20001']);
@@ -128,8 +128,8 @@ objective('ComponentRelay', function() {
         );
 
         Promise.all([
-          person2.exchange.group1.relay.create(relaySpec1),
-          person2.exchange.group1.relay.create(relaySpec2),
+          person2.exchange.group1.relay.createServer(relaySpec1),
+          person2.exchange.group1.relay.createServer(relaySpec2),
         ])
 
         .then(done).catch(done);
@@ -164,7 +164,7 @@ objective('ComponentRelay', function() {
           function relayConnected(happn, connection, relaySpec, callback) {callback()}
         );
 
-        person3.exchange.group1.relay.create(relaySpec1)
+        person3.exchange.group1.relay.createServer(relaySpec1)
 
         .then(function() {
 
@@ -182,7 +182,7 @@ objective('ComponentRelay', function() {
             }
           );
 
-          return person3.exchange.group1.relay.create(relaySpec2)
+          return person3.exchange.group1.relay.createServer(relaySpec2)
 
         })
 
@@ -190,12 +190,55 @@ objective('ComponentRelay', function() {
       }
     );
 
+    it('uses existing endpoint');
+
+    it('---► Create and use a relayed component',
+
+      function(done, happner, GroupConfig, PersonConfig) {
+
+        this.timeout(2000);
+
+        var group0;
+        var person0;
+        var $happn;
+
+        happner.create(GroupConfig(0))
+
+        .then(function(group) {
+          group0 = group;
+          return happner.create(PersonConfig(0, 0));
+        })
+
+        .then(function(person) {
+          person0 = person;
+          $happn = person0._mesh.elements.thing1.component.instance;
+          return person0.exchange.group0.relay.createServer({
+            target: $happn.info.datalayer.address,
+            component: {
+              name: 'relay_person0_thing1',
+              description: $happn.description
+            }
+          });
+        })
+
+        .then(function() {
+
+          throw Pending  // TODO: objective_dev: pend a partially implemented test (NB without not running it)
+
+        })
+
+        .then(done).catch(done);
+      }
+    );
+
+    
+
   });
 
 
   context('calls server.relayEvented() if no connection is possible/available', function() {
 
-    before(function(done, Promise, happner, GroupConfig, PersonConfig, ComponentRelay) {
+    before(function(done, Promise, happner, GroupConfig, PersonConfig) {
       this.timeout(2000);
       Promise.all([
         happner.create(GroupConfig(2)),
@@ -212,7 +255,7 @@ objective('ComponentRelay', function() {
       })
       .then(done)./*catch(done)*/catch(function(e) {
         if (! e instanceof Error) {
-          console.log('ERROR1', e); // <----------------------------------- TODO: getting errors that are not instanceof Error out of happn/happner, eradicate this behaviour.
+          console.log('ERROR1', e);
           return done(new Error());
         }
         done(e);
@@ -250,7 +293,7 @@ objective('ComponentRelay', function() {
           function relayEvented(happn, relaySpec, callback) {callback()}
         );
 
-        person4.exchange.group2.relay.create(relaySpec)
+        person4.exchange.group2.relay.createServer(relaySpec)
 
         .then(done).catch(done);
 
@@ -275,7 +318,7 @@ objective('ComponentRelay', function() {
           function relayEvented(happn, relaySpec, callback) {callback()}
         );
 
-        person5.exchange.group2.relay.create(relaySpec)
+        person5.exchange.group2.relay.createServer(relaySpec)
 
         .then(done).catch(done);
 

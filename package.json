@@ -2,7 +2,7 @@
   "name": "happner-component-relay",
   "version": "0.0.0",
   "description": "A component to enable exposing selected functionalities from nodes on a private branch via a node on a public branch.",
-  "main": "lib/component_relay.js",
+  "main": "lib/relay.js",
   "directories": {
     "test": "test"
   },
