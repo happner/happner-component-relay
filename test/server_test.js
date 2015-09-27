@@ -254,7 +254,7 @@ objective('Server', function() {
 
   });
 
-  context('relayConnected()', function() {
+  context('createRelayConnected()', function() {
 
     context('exchange methods', function() {
 
@@ -303,7 +303,7 @@ objective('Server', function() {
             } 
           )
 
-          Server.relayConnected($happn, connection, relaySpec, done);
+          Server.createRelayConnected($happn, connection, relaySpec, done);
         }
       );
 

@@ -1,5 +1,13 @@
 [![Build Status](https://travis-ci.org/happner/happner-component-relay.svg?branch=master)](https://travis-ci.org/happner/happner-component-relay)
 
+EXPERIMENTAL
+
+### TODO
+
+* Ensure subscripts are properly off'd (using happn refId), even after a 'reconnect' to a restarted remote datalayer.
+* Relay over event api when connection to private unavailable / impossible
+
+
 # happner-component-relay
 
 A component to enable exposing selected functionalities from nodes on a private branch via a node on a public branch.

@@ -9,7 +9,7 @@ objective('Relay', function() {
   });
 
 
-  context('calls server.relayConnected() if datalayer connectable', function() {
+  context('calls server.createRelayConnected() if datalayer connectable', function() {
 
     before(function(done, Promise, happner, GroupConfig, PersonConfig) {
       this.timeout(20000);
@@ -67,9 +67,9 @@ objective('Relay', function() {
           }
         }
 
-        // expect 1 call the relayConnected()
+        // expect 1 call the createRelayConnected()
 
-        Server.does(function relayConnected(happn, connection, relaySpec, callback) {callback()});
+        Server.does(function createRelayConnected(happn, connection, relaySpec, callback) {callback()});
 
         // expect 1 call to addConnection
 
@@ -113,11 +113,11 @@ objective('Relay', function() {
           }
         };
 
-        // expect 2 calls to relayConnected()
+        // expect 2 calls to createRelayConnected()
 
         Server.does(
-          function relayConnected(happn, connection, relaySpec, callback) {callback()},
-          function relayConnected(happn, connection, relaySpec, callback) {callback()}
+          function createRelayConnected(happn, connection, relaySpec, callback) {callback()},
+          function createRelayConnected(happn, connection, relaySpec, callback) {callback()}
         );
 
         // expect 1 call to addConnection
@@ -159,20 +159,20 @@ objective('Relay', function() {
           }
         };
 
-        // expect 1 call to relayConnected
+        // expect 1 call to createRelayConnected
 
         Server.does(
-          function relayConnected(happn, connection, relaySpec, callback) {callback()}
+          function createRelayConnected(happn, connection, relaySpec, callback) {callback()}
         );
 
         person3.exchange.group1.relay.createServer(relaySpec1)
 
         .then(function() {
 
-          // expect 1 call to relayConnected
+          // expect 1 call to createRelayConnected
 
           Server.does(
-            function relayConnected(happn, connection, relaySpec, callback) {callback()}
+            function createRelayConnected(happn, connection, relaySpec, callback) {callback()}
           );
 
           // expct no calls to addConnection
@@ -203,6 +203,8 @@ objective('Relay', function() {
         var person0;
         var $happn;
 
+        var createdKey;
+
         happner.create(GroupConfig(0)) // Create mesh node called group0
 
         .then(function(group) {
@@ -222,7 +224,9 @@ objective('Relay', function() {
           });
         })
 
-        .then(function() {
+        .then(function(key) {
+
+          createdKey = key; // for destroying
 
           // Call through relay to person0/thing1/exchangeMethod()
 
@@ -349,13 +353,9 @@ objective('Relay', function() {
 
         .then(function() {
 
-          // TODO: remove the relay
+          // remove the relay
 
-        })
-
-        .then(function() {
-
-          throw Pending
+          return person0.exchange.group0.relay.destroyServer(createdKey)
 
         })
 
@@ -368,7 +368,7 @@ objective('Relay', function() {
   });
 
 
-  context('calls server.relayEvented() if no connection is possible/available', function() {
+  context('calls server.createRelayEvented() if no connection is possible/available', function() {
 
     before(function(done, Promise, happner, GroupConfig, PersonConfig) {
       this.timeout(2000);
@@ -422,7 +422,7 @@ objective('Relay', function() {
         };
 
         Server.does(
-          function relayEvented(happn, relaySpec, callback) {callback()}
+          function createRelayEvented(happn, relaySpec, callback) {callback()}
         );
 
         person4.exchange.group2.relay.createServer(relaySpec)
@@ -447,7 +447,7 @@ objective('Relay', function() {
         };
 
         Server.does(
-          function relayEvented(happn, relaySpec, callback) {callback()}
+          function createRelayEvented(happn, relaySpec, callback) {callback()}
         );
 
         person5.exchange.group2.relay.createServer(relaySpec)
@@ -457,7 +457,7 @@ objective('Relay', function() {
       }
     );
 
-    it('► Create and use a relayed component over "reverse" event api', function() {
+    xit('► Create and use a relayed component over "reverse" event api', function() {
       throw Pending;
     });
 
