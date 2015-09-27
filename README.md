@@ -36,7 +36,7 @@ happner.create({
 happner.create({
   name: 'person', // <------------ person node
   endpoints: {
-    'group': {    // <------------ person connected to group
+    'group': {    // <------------ person endpoint connected to group
       ...
     }
   },
@@ -55,11 +55,10 @@ B - __person publishes thing on group__
 ```javascript
 
 $happn.exchange.relay.create({
-  local: 'thing',              // local component to 'relay to'
-  remote: 'person_thing',      // name of 'representative' component created on group node that relays to 'thing'
 
-  // relay: 'group',           // if person has more than one endpoint, then specify
-  // relay: 'group/alt-relay', // if endpoint (group) has relay server component with alternate name
+  local: 'thing',
+  remote: 'person_thing',
+  // relay: 'group', // can default, only one endpoint
 
 }, function(e, token) {
   
