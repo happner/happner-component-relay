@@ -14,7 +14,12 @@ objective('Server', function() {
     mock('should', new require('chai').should());
   });
 
-  before(function() {
+  before(function(Server) {
+
+    mock('serverInstance', {
+      relays: {},
+      createDynamicModule: Server.prototype.createDynamicModule
+    });
 
     mock('$happn', {
       _mesh: {
@@ -101,7 +106,7 @@ objective('Server', function() {
 
       it('creates relay functions according to description.methods',
 
-        function(done, Server, expect, $happn, connection, relaySpec, Promise) {
+        function(done, Server, expect, $happn, connection, relaySpec, Promise, serverInstance) {
 
           // Create expectations on the exchange for the target module's methods 
 
@@ -126,7 +131,7 @@ objective('Server', function() {
           relaySpec.component.description.events = {};
           relaySpec.component.description.data = {};
 
-          Server.createDynamicModule('connected', $happn, connection, relaySpec, function(e, instance) {
+          Server.prototype.createDynamicModule.call(serverInstance, 'connected', $happn, connection, relaySpec, function(e, instance) {
             if (e) return done(e);
 
             // Call the instance which relays, should lead to the above expectations being 'met'
@@ -150,7 +155,7 @@ objective('Server', function() {
 
       it('creates relay routes according to description.routes',
 
-        function(done, Server, expect, $happn, connection, relaySpec) {
+        function(done, Server, expect, $happn, connection, relaySpec, serverInstance) {
 
           relaySpec.component.description.methods = {};
           relaySpec.component.description.routes = {
@@ -163,7 +168,7 @@ objective('Server', function() {
           relaySpec.component.description.events = {};
           relaySpec.component.description.data = {};
 
-          Server.createDynamicModule('connected', $happn, connection, relaySpec, function(e, instance, routes) {
+          Server.prototype.createDynamicModule.call(serverInstance, 'connected', $happn, connection, relaySpec, function(e, instance, routes) {
             if (e) return done(e);
 
             expect(instance['/target_component/webMethodGet'] instanceof Function).to.equal(true);
@@ -176,7 +181,7 @@ objective('Server', function() {
 
       it('forwards events according to description.events',
 
-        function(done, subscribers, Server, expect, $happn, connection, relaySpec) {
+        function(done, subscribers, Server, expect, $happn, connection, relaySpec, serverInstance) {
 
           relaySpec.component.description.methods = {};
           relaySpec.component.description.routes = {};
@@ -213,7 +218,7 @@ objective('Server', function() {
             }
           );
 
-          Server.createDynamicModule('connected', $happn, connection, relaySpec, function(e, instance) {
+          Server.prototype.createDynamicModule.call(serverInstance, 'connected', $happn, connection, relaySpec, function(e, instance) {
             if (e) return done(e);
 
             // Test relay emit
@@ -260,7 +265,7 @@ objective('Server', function() {
 
       it('inserts a representative component into the mesh',
 
-        function(done, Server, expect, $happn, connection, relaySpec) {
+        function(done, Server, expect, $happn, connection, relaySpec, serverInstance) {
 
           mock($happn._mesh).does(
 
@@ -297,13 +302,13 @@ objective('Server', function() {
             }
           )
 
-          Server.does(
+          mock(serverInstance).does(
             function createDynamicModule(type, $happn, connection, relaySpec, callback) {
               callback(null, '__INSTANCE__');
             } 
           )
 
-          Server.createRelayConnected($happn, connection, relaySpec, done);
+          Server.prototype.createRelayConnected.call(serverInstance, $happn, connection, relaySpec, done);
         }
       );
 

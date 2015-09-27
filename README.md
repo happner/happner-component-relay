@@ -4,6 +4,7 @@ EXPERIMENTAL
 
 ### TODO
 
+* Auto destroy relaying component after timeout after target link departed. __For now it's up to the client to destroy__
 * Ensure subscripts are properly off'd (using happn refId), even after a 'reconnect' to a restarted remote datalayer.
 * Relay over event api when connection to private unavailable / impossible
 

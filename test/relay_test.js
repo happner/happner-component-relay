@@ -69,7 +69,7 @@ objective('Relay', function() {
 
         // expect 1 call the createRelayConnected()
 
-        Server.does(function createRelayConnected(happn, connection, relaySpec, callback) {callback()});
+        mock(Server.prototype).does(function createRelayConnected(happn, connection, relaySpec, callback) {callback()});
 
         // expect 1 call to addConnection
 
@@ -115,7 +115,7 @@ objective('Relay', function() {
 
         // expect 2 calls to createRelayConnected()
 
-        Server.does(
+        mock(Server.prototype).does(
           function createRelayConnected(happn, connection, relaySpec, callback) {callback()},
           function createRelayConnected(happn, connection, relaySpec, callback) {callback()}
         );
@@ -161,7 +161,7 @@ objective('Relay', function() {
 
         // expect 1 call to createRelayConnected
 
-        Server.does(
+        mock(Server.prototype).does(
           function createRelayConnected(happn, connection, relaySpec, callback) {callback()}
         );
 
@@ -171,7 +171,7 @@ objective('Relay', function() {
 
           // expect 1 call to createRelayConnected
 
-          Server.does(
+          mock(Server.prototype).does(
             function createRelayConnected(happn, connection, relaySpec, callback) {callback()}
           );
 
@@ -421,7 +421,7 @@ objective('Relay', function() {
           }
         };
 
-        Server.does(
+        mock(Server.prototype).does(
           function createRelayEvented(happn, relaySpec, callback) {callback()}
         );
 
@@ -446,7 +446,7 @@ objective('Relay', function() {
           }
         };
 
-        Server.does(
+        mock(Server.prototype).does(
           function createRelayEvented(happn, relaySpec, callback) {callback()}
         );
 
