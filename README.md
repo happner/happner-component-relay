@@ -18,9 +18,9 @@ Relays access to selected components on one mesh node via another mesh node.
 
 `npm install happner-relay --save`
 
-### config
+### Usage
 
-__2 Mesh Node's Configs__
+1. __2 Mesh Node's Configs__
 
 ```javascript
 
@@ -50,7 +50,7 @@ happner.create({
 
 ```
 
-__person publishes thing on group__
+2. __person publishes thing on group__
 
 ```javascript
 
@@ -65,5 +65,11 @@ $happn.exchange.relay.create({
 
 ```
 
-__now person/thing is available at group/person_thing__
+Now __person/thing__ is available at __group/person_thing__
+
+3. __person removes thing from group__
+
+```javascript
+
+```
 
