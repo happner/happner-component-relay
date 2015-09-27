@@ -20,7 +20,7 @@ Relays access to selected components on one mesh node via another mesh node.
 
 ### Usage
 
-1. __2 Mesh Node's Configs__
+A - __2 Mesh Node's Configs__
 
 ```javascript
 
@@ -50,7 +50,7 @@ happner.create({
 
 ```
 
-2. __person publishes thing on group__
+B - __person publishes thing on group__
 
 ```javascript
 
@@ -67,7 +67,7 @@ $happn.exchange.relay.create({
 
 Now __person/thing__ is available at __group/person_thing__
 
-3. __person removes thing from group__
+C - __person removes thing from group__
 
 ```javascript
 
