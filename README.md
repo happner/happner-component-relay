@@ -59,6 +59,7 @@ $happn.exchange.relay.create({
   local: 'thing',
   remote: 'person_thing',
   // relay: 'group', // can default, only one endpoint
+  // relay: 'group/relay'
 
 }, function(e, token) {
   
