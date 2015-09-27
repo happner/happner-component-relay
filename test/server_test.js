@@ -1,5 +1,11 @@
 objective('Server', function() {
 
+  it('fails if component name already exists');
+
+  it('fails on mountpoint occupied ?? or merge option');
+
+  it('does not allow for insertion of component with accessLevel "mesh" ?? pending security');
+
   before(function() {
     // mock('GroupConfig',  require('./_group_config').config);
     // mock('PersonConfig', require('./_person_config').config);
@@ -11,8 +17,33 @@ objective('Server', function() {
   before(function() {
 
     mock('$happn', {
-      _mesh: {}
+      _mesh: {
+        elements: {
+          relaying_component: {
+            component: {
+              instance: {
+                emit: function() {}
+              }
+            }
+          }
+        }
+      }
     });
+
+    var seq = 0;
+    var subscribers = {
+      list: {},
+      add: function(event, handler, callback) {
+        seq++;
+        subscribers.list[seq] = {
+          event: event,
+          handler: handler,
+        }
+        callback(null, seq);
+      }
+    };
+
+    mock('subscribers', subscribers);
 
     mock('connection', {
       target: {
@@ -27,6 +58,24 @@ objective('Server', function() {
       endpoint: {
         exchange: {
           'target_component': {} // The module at the 'remote' as visible over the connection.
+        },
+        event: {
+          'target_component': {
+            on: function(event, handler, callback) {
+              subscribers.add(event, handler, callback);
+            },
+            off: function() {
+              // TODO: subscriber flush on _destroyElement()
+              // TODO: subscriber flush here.
+              // 
+              // ie. when a component 'goes away',
+              //     - all component subscribed to events from that component remain subscribed
+              //     - no events will be received
+              //     - but the list of subscribers remains in happn
+              //     - getting larger and larger with the comings and goings of modules
+              //
+            }
+          }
         }
       }
     });
@@ -35,9 +84,7 @@ objective('Server', function() {
       component: {
         name: 'relaying_component',
         description: {
-
           name: 'target_component',
-          
           methods: {},
           routes: {},
           events: {},
@@ -48,7 +95,7 @@ objective('Server', function() {
 
   });
 
-  context.only('createDynamicModule()', function() {
+  context('createDynamicModule()', function() {
 
     context('Using Connection', function() {
 
@@ -103,7 +150,7 @@ objective('Server', function() {
 
       it('creates relay routes according to description.routes',
 
-        function(done, Server, expect, $happn, connection, relaySpec, Promise) {
+        function(done, Server, expect, $happn, connection, relaySpec) {
 
           relaySpec.component.description.methods = {};
           relaySpec.component.description.routes = {
@@ -117,6 +164,7 @@ objective('Server', function() {
           relaySpec.component.description.data = {};
 
           Server.createDynamicModule('connected', $happn, connection, relaySpec, function(e, instance, routes) {
+            if (e) return done(e);
 
             expect(instance['/target_component/webMethodGet'] instanceof Function).to.equal(true);
             expect(routes.webMethodGet).to.equal('/target_component/webMethodGet');
@@ -125,7 +173,77 @@ objective('Server', function() {
           });
         }
       );
-      
+
+      it('forwards events according to description.events',
+
+        function(done, subscribers, Server, expect, $happn, connection, relaySpec) {
+
+          relaySpec.component.description.methods = {};
+          relaySpec.component.description.routes = {};
+          relaySpec.component.description.events = {
+            'tamecard': {},
+            'wildcard/*': {},
+          };
+          relaySpec.component.description.data = {};
+
+          // ensure subscribers get added from description.events
+
+          subscribers.does(
+            function add(path) {
+              expect(path).to.equal('tamecard');
+              mock.original.apply(this, arguments);
+            },
+            function add(path) {
+              expect(path).to.equal('wildcard/*');
+              mock.original.apply(this, arguments);
+            }
+          );
+
+          // ensure relyed events were emitted
+
+          mock($happn._mesh.elements.relaying_component.component.instance).does(
+            function emit(path, data) {
+              expect(path).to.equal('tamecard');
+              expect(data).to.eql({ source: 'tamecard' });
+            },
+            function emit(path, data) {
+              expect(path).to.equal('wildcard/*');
+              expect(data).to.eql({ source: 'wildcard/*' });
+              done();
+            }
+          );
+
+          Server.createDynamicModule('connected', $happn, connection, relaySpec, function(e, instance) {
+            if (e) return done(e);
+
+            // Test relay emit
+
+            var emitted = {};
+            Object.keys(subscribers.list).forEach(function(id) {
+              var event = subscribers.list[id].event;
+              if (emitted[event]) return; // emit only one per registered event
+              emitted[event] = 1;
+              var handler = subscribers.list[id].handler;
+
+              eventBase = '/events/target_mesh/target_component';
+
+              var meta = {
+                path: eventBase + '/' + event
+              };
+
+              handler({source: event}, meta);
+
+
+            });
+          });
+        }
+      );
+
+      it('make relay of data possible?');
+
+      it('can disconnect the relay');
+
+  
     });
 
     context('Unsing Event Api', function() {
@@ -153,9 +271,18 @@ objective('Server', function() {
               writeSchema.should.equal(true);
 
               spec.component.name.should.equal('relaying_component');
-              spec.component.config.should.eql({
-                module: 'relaying_component'
-              });
+              // spec.component.config.should.eql({
+              //   module: 'relaying_component',
+              //   schema: {
+              //     methods: {}
+              //   },
+              //   web: {},
+              //   events: {
+              //     tamecard: {},
+              //     'wildcard/*': {}
+              //   },
+              //   data: {}
+              // });
 
               spec.module.name.should.equal('relaying_component');
 
@@ -180,33 +307,7 @@ objective('Server', function() {
         }
       );
 
-      it('the representative component relays method calls across the connection');
-
-      it('fails if component name already exists');
-
-      xit('fails on mountpoint occupied ?? or merge option');
-
-      it('does not allow for insertion of component with accessLevel "mesh" ?? pending security');
-
     });
-
-    context('web methods', function() {
-    });
-
-    context('events', function() {
-
-      context('subscribe to representative');
-
-      context('emits from remote via representative');
-
-    });
-
-    context('data ??');
-
-  });
-
-
-  context('relayEvented()', function() {
 
   });
 

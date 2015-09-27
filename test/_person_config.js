@@ -17,6 +17,11 @@ var thing = {
           routes: {
             'method': 'webMethod'
           }
+        },
+        events: {
+          'event1': {},
+          'event2/*': {},
+          'done': {},
         }
       }
     }

@@ -12,7 +12,7 @@ objective('Relay', function() {
   context('calls server.relayConnected() if datalayer connectable', function() {
 
     before(function(done, Promise, happner, GroupConfig, PersonConfig) {
-      this.timeout(2000);
+      this.timeout(20000);
       Promise.all([
         happner.create(GroupConfig(1)),
         happner.create(PersonConfig(1, 1)),
@@ -193,11 +193,11 @@ objective('Relay', function() {
 
     it('uses existing endpoint');
 
-    it.only('► Create and use a relayed component over datalayer connection',
+    it('► Create and use a relayed component over datalayer connection',
 
       function(done, happner, GroupConfig, PersonConfig, expect, request) {
 
-        this.timeout(2000);
+        this.timeout(5000);
 
         var group0;
         var person0;
@@ -241,7 +241,7 @@ objective('Relay', function() {
 
         .then(function() {
 
-          // call to webmethod
+          // call to webmethod (only fully supports GET for now)
 
           return request.getAsync('http://localhost:10000/relay_person0_thing1/method/moo/ook')
 
@@ -250,6 +250,106 @@ objective('Relay', function() {
         .then(function(result) {
 
           expect(result[0].body).to.equal('reply for GET from person0.thing1.webMethod() with /moo/ook');
+
+        })
+
+        .then(function() {
+
+          // test for relayed events from remote
+
+          return new Promise(function(resolve, reject) {
+
+            var results = [];
+
+            Promise.all([
+
+              // subscribe to multiple on the 'relaying' component, including wildcarders
+
+              group0.event.relay_person0_thing1.onAsync('event1', function(data, meta) {
+                results.push({
+                  path: meta.path,
+                  data: data.data
+                });
+              }),
+              group0.event.relay_person0_thing1.onAsync('event2/1', function(data, meta) {
+                results.push({
+                  path: meta.path,
+                  data: data.data
+                });
+              }),
+              group0.event.relay_person0_thing1.onAsync('event2/2', function(data, meta) {
+                results.push({
+                  path: meta.path,
+                  data: data.data
+                });
+              }),
+              group0.event.relay_person0_thing1.onAsync('event2/*', function(data, meta) {
+                results.push({
+                  path: meta.path,
+                  data: data.data
+                });
+              }),
+              group0.event.relay_person0_thing1.onAsync('done', function(data, meta) {
+                results.push({
+                  path: meta.path,
+                  data: data.data
+                });
+                try {
+                  expect(results).to.eql([
+                    {
+                      "path": "/events/group0/relay_person0_thing1/event1",
+                      "data": "EVENT1"
+                    },
+                    {
+                      "path": "/events/group0/relay_person0_thing1/event2/1",
+                      "data": "EVENT2/1"
+                    },
+                    {
+                      "path": "/events/group0/relay_person0_thing1/event2/1",
+                      "data": "EVENT2/1"
+                    },
+                    {
+                      "path": "/events/group0/relay_person0_thing1/event2/2",
+                      "data": "EVENT2/2"
+                    },
+                    {
+                      "path": "/events/group0/relay_person0_thing1/event2/2",
+                      "data": "EVENT2/2"
+                    },
+                    {
+                      "path": "/events/group0/relay_person0_thing1/done",
+                      "data": "DONE"
+                    }
+                  ]);
+                } catch (e) {
+                  return reject(e);
+                }
+                resolve();
+              }),
+
+            ])
+
+            .then(function(){
+
+              // Ready for events, emit from the 'relayed' component
+
+              var $happn = person0._mesh.elements.thing1.component.instance;
+
+              $happn.emit('event1', {data: 'EVENT1'});
+              $happn.emit('event2/1', {data: 'EVENT2/1'});
+              $happn.emit('event2/2', {data: 'EVENT2/2'});
+              $happn.emit('done', {data: 'DONE'});
+
+            })
+
+            .catch(reject)
+          })
+
+        })
+
+        .then(function() {
+
+          // TODO: remove the relay
 
         })
 

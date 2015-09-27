@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "LOG_LEVEL=warn objective --once"
+    "test": "LOG_LEVEL=warn SKIP_SUITES=1 objective --once"
   },
   "repository": {
     "type": "git",
