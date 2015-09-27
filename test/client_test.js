@@ -1,4 +1,4 @@
-objective.only('Client', function() {
+objective('Client', function() {
 
   before(function() {
     mock('$happn', {

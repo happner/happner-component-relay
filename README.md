@@ -1,17 +1,5 @@
 [![Build Status](https://travis-ci.org/happner/happner-relay.svg?branch=master)](https://travis-ci.org/happner/happner-relay)
 
-`EXPERIMENTAL`
-
-##### TODO
-
-* Auto destroy relaying component after timeout after target link departed. __For now it's up to the client to destroy__
-* Ensure subscripts are properly off'd (using happn refId), even after a 'reconnect' to a restarted remote datalayer.
-* Relay over event api when connection to private unavailable / impossible
-* Handle http/https
-* Handle vhosts (cannot be reached by ipaddress)
-* Security
-
-
 # happner-relay
 
 Relays access to selected components on one mesh node via another mesh node.
@@ -83,4 +71,15 @@ D - __person removes thing from group__
 ```javascript
 $happn.exchange.relay.destroy(token, function(e) {});
 ```
+
+
+##### TODO
+
+* Auto destroy relaying component after timeout after target link departed. __For now it's up to the client to destroy__
+* Ensure subscripts are properly off'd (using happn refId), even after a 'reconnect' to a restarted remote datalayer.
+* Relay over event api when connection to private unavailable / impossible
+* Handle http/https
+* Handle vhosts (cannot be reached by ipaddress)
+* Security
+
 
