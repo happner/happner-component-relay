@@ -14,6 +14,62 @@ EXPERIMENTAL
 A component to enable exposing selected functionalities from nodes on a private branch via a node on a public branch.
 
 
+
+### config
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REMOVE: 
+
 ### The Public Node
 
 Has the relay component installed and a datalayer accessable to the remote (private node)
