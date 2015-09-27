@@ -11,7 +11,7 @@ EXPERIMENTAL
 
 # happner-relay
 
-A component to enable exposing selected functionalities from nodes on a private branch via a node on a public branch.
+Relays access to selected components on one mesh node via another mesh node.
 
 
 
