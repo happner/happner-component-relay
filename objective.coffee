@@ -1,6 +1,6 @@
 objective
     
-    title: 'Happner Component Relay'
+    title: 'Happner Relay'
     uuid: '620dddb3-a9bf-4c48-a045-469f5a1e5221'
     description: """
 

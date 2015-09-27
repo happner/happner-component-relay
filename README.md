@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/happner/happner-component-relay.svg?branch=master)](https://travis-ci.org/happner/happner-component-relay)
+[![Build Status](https://travis-ci.org/happner/happner-relay.svg?branch=master)](https://travis-ci.org/happner/happner-relay)
 
 EXPERIMENTAL
 
@@ -9,7 +9,7 @@ EXPERIMENTAL
 * Relay over event api when connection to private unavailable / impossible
 
 
-# happner-component-relay
+# happner-relay
 
 A component to enable exposing selected functionalities from nodes on a private branch via a node on a public branch.
 
