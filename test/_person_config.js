@@ -1,4 +1,4 @@
-// "Private" node
+var path = require('path');
 
 // The module definition (to be relayed)
 
@@ -40,6 +40,9 @@ module.exports.config = function(i, j) {
     modules: {
       'thing': {
         instance: thing
+      },
+      'component-relay': {
+        path: path.normalize(__dirname + '/../') // get at __this__ module
       }
     },
     components: {
@@ -49,6 +52,9 @@ module.exports.config = function(i, j) {
       'thing2': {
         module: 'thing'
       },
+      'relay': {
+        module: 'component-relay'
+      }
     }
   }
 }

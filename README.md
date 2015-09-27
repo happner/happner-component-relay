@@ -61,15 +61,26 @@ $happn.exchange.relay.create({
   // relay: 'group',           // if person has more than one endpoint, then specify
   // relay: 'group/alt-relay', // if endpoint (group) has relay server component with alternate name
 
-})
+}, function(e, token) {
+  
+  // use token to destroy (stop) the relay
+
+});
 
 ```
 
 Now __person/thing__ is available at __group/person_thing__
 
-C - __person removes thing from group__
+C - __person lists relayed components__
 
 ```javascript
+$happn.exchange.relay.list(function(e, list) {})
+```
 
+
+D - __person removes thing from group__
+
+```javascript
+$happn.exchange.relay.destroy(token, function(e) {});
 ```
 

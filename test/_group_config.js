@@ -1,5 +1,3 @@
-// "Public" node
-
 var path = require('path');
 
 module.exports.config = function(i) {
