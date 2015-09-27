@@ -2,7 +2,8 @@
 
 # happner-relay
 
-Relays access to selected components on one mesh node (eg. person) via another mesh node (eg. group).
+Relays access to selected components on one mesh node (eg. __person__)<br/>
+via another mesh node (eg. __group__).
 
 `npm install happner-relay --save`
 
