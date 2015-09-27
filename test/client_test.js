@@ -157,7 +157,7 @@ objective.only('Client', function() {
       .then(done).catch(done);
     });
 
-    it('creates a relay',
+    it('creates a relay, uses it and destroys it',
 
       function(done, group3, person8, person9, expect) {
 
